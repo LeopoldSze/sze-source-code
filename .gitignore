@@ -1,0 +1,9 @@
+.idea
+node_modules
+dist
+.yarn-debug.log
+.pnpm-debug.log
+
+# 忽略 *.css.map
+/less/**/*.css.map
+/scss/**/*.css.map

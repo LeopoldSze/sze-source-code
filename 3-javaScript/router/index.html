@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>router</title>
+</head>
+<body>
+<div class="action-wrapper">
+  <a href="/">/</a>
+  <a href="#page1">page1</a>
+  <a href="#page2">page2</a>
+  <button class="forward">前进</button>
+  <button class="backward">后退</button>
+  <button class="replace">替换</button>
+</div>
+<script src="hashRouter.js"></script>
+<script>
+  const forward = document.querySelector('.forward');
+  const backward = document.querySelector('.backward');
+  const replace = document.querySelector('.replace');
+  
+  const router = new HashRouter([])
+  
+  forward.onclick = function () {
+  
+  }
+</script>
+</body>
+</html>

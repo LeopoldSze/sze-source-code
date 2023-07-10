@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ESM</title>
+</head>
+<body>
+<script type="module">
+  import { name } from "./foo.js";
+  console.log('name2:', name);
+</script>
+<script>
+  function test(a, b){
+    console.log(b);
+    return {
+      test: function(c) {
+        return test(c,a);
+      }
+    }
+  }
+
+  const a = test(100);
+  a.test(101);
+  a.test(102);
+  const b = test(200).test(201).test(202);
+  const c = test(300).test(301);
+  c.test(302);
+</script>
+</body>
+</html>

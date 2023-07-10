@@ -1,0 +1,38 @@
+/* 1.嵌套 */
+#header{
+  &::after{
+    content: "Less is more!";
+  }
+
+  .title{
+    font-weight: bold;
+  }
+
+  &_content{ //理解方式：直接把 & 替换成 #header
+    margin: 20px;
+  }
+}
+
+/* 2.媒体查询 */
+#main {
+  @media screen{
+    @media (max-width:768px){
+      width:100px;
+    }
+  }
+
+  @media tv {
+    width:2000px;
+  }
+}
+
+/* 3.实战 */
+#main {
+  &.show{
+    display:block;
+  }
+}
+
+.show {
+  display:none;
+}

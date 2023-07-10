@@ -1,0 +1,11 @@
+{
+  // comment
+  title: 'JSON5 Example',
+  owner: {
+    name: 'Leopold-Sze',
+    organization: 'GitHub',
+    bio: 'GitHub Cofounder & CEO\n\
+          Likes tater tots.',
+    dob: '1995-10-18T07:32:23:00.00Z'
+  }
+}

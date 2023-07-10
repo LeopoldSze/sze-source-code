@@ -1,0 +1,30 @@
+@font-face {
+  font-family: 'webfont';
+  src: url("./assets/webfont.ttf") format('truetype');
+}
+
+.test {
+  color: aquamarine;
+}
+
+.icon {
+  font-family: 'webfont', sans-serif;
+  font-size: 20px;
+}
+
+.block-bg {
+  background-image: url("./assets/1.svg")!important;
+}
+
+body {
+  background-color: azure;
+  display: flex;
+  flex-direction: column;
+  
+  div.box {
+    width: 400px;
+    height: 400px;
+    background-color: bisque;
+  }
+}
+

@@ -1,0 +1,28 @@
+/* 1.extend */
+.animation{
+  transition: all .3s ease-out;
+
+  .hide{
+    transform: scale(0);
+  }
+}
+
+.one_1 {
+  &:extend(.animation);
+}
+
+.one_2 {
+  &:extend(.animation .hide);
+}
+
+/* 2.all 全局搜索替换 */
+.two {
+  width: 200px;
+}
+.two {
+  &:after {
+    content:"Less is good!";
+  }
+}
+
+#two:extend(.two all) {}

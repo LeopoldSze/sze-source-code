@@ -1,0 +1,160 @@
+/* 1.无参数方法 ./# */
+.card { // 等价于 .card()
+  background: #f6f6f6;
+  -webkit-box-shadow: 0 1px 2px rgba(151, 151, 151, .58);
+  box-shadow: 0 1px 2px rgba(151, 151, 151, .58);
+}
+
+.one {
+  .card; //等价于.card();
+}
+
+/* 2.默认参数方法 */
+.border(@a: 10px, @b: 50px, @c: 30px, @color: #000) {
+  border: solid 1px @color;
+  box-shadow: @arguments; // 指代的是 全部参数
+}
+
+.two_1 {
+  .border(0px, 5px, 30px, red); // 必须带着单位
+}
+
+.two_2 {
+  .border(0px);
+}
+
+.two_3 {
+  .border; //等价于 .border()
+}
+
+/* 3.匹配模式 */
+.triangle(top, @width: 20px, @color: #000) {
+  border-color: transparent  transparent @color transparent ;
+}
+
+.triangle(right, @width: 20px, @color: #000) {
+  border-color: transparent @color transparent  transparent ;
+}
+
+.triangle(bottom, @width:20px, @color: #000) {
+  border-color: @color transparent  transparent  transparent ;
+}
+
+.triangle(left, @width:20px, @color: #000) {
+  border-color: transparent  transparent  transparent @color;
+}
+
+.triangle(@_, @width: 20px, @color: #000){
+  border-style: solid;
+  border-width: @width;
+}
+
+.three{
+  .triangle(left, 50px, #999); // 匹配 4&5
+}
+
+/* 4.命名空间 */
+#card() {
+  background: #723232;
+
+  .d(@w: 300px) {
+    width: @w;
+
+    #a(@h: 200px) {
+      height: @h; // 可以使用上一层传进来的方法
+    }
+  }
+}
+
+.four_1 {
+  #card > .d > #a(100px); // 父元素不能加 括号
+}
+
+.four_2 {
+  #card .d();
+}
+
+.four_3 {
+  // 不得单独使用命名空间的方法
+  //.d() 如果前面没有引入命名空间 #card ，将会报错
+
+  #card; // 等价于 #card();
+  .d(20px); //必须先引入 #card
+}
+
+/* 5.方法筛选 */
+#card {
+  // and 运算符相当于 与运算 &&，必须条件全部符合才会执行
+  .border(@width, @color, @style) when (@width > 100px) and (@color = #999) {
+    border: @style @color @width;
+  }
+
+  // not 运算符相当于 非运算 !，条件为 不符合才会执行
+  .background(@color) when not (@color >= #222) {
+    background: @color;
+  }
+
+  // , 逗号分隔符：相当于 或运算 ||，只要有一个符合条件就会执行
+  .font(@size: 20px) when (@size > 50px) , (@size < 100px) {
+    font-size: @size;
+  }
+}
+
+#main {
+  #card > .border(200px, #999, solid);
+  #card .background(#111);
+  #card > .font(40px);
+}
+
+/* 6.不定参数 */
+.boxShadow(...) {
+  box-shadow: @arguments;
+}
+.textShadow(@a, ...) {
+  text-shadow: @arguments;
+}
+
+.six {
+  .boxShadow(1px, 4px, 30px, red);
+  .textShadow(1px, 4px, 30px, red);
+}
+
+/* 7.使用!important */
+.bor {
+  border: solid 1px red;
+  margin: 50px;
+}
+
+.seven  {
+  .bor() !important;
+}
+
+/* 8.循环方法 */
+.generate-columns(4);
+
+.generate-columns(@n, @i: 1) when (@i =< @n) {
+  .column-@{i} {
+    width: (@i * 100% / @n);
+  }
+
+  .generate-columns(@n, (@i + 1));
+}
+
+/* 9.属性拼接 - 逗号 */
+.comma() {
+  box-shadow+: inset 0 0 10px #555;
+}
+.main {
+  .comma();
+  box-shadow+: 0 0 20px black;
+}
+
+/* 9.属性拼接 - 空格 */
+.Animation() {
+  transform+_: scale(2);
+}
+
+.main {
+  .Animation();
+  transform+_: rotate(15deg);
+}

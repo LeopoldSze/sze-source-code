@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LeopoldVue</title>
+</head>
+<body>
+<div id="app">
+  <input type="text" v-model="msg">
+  <h3>{{ msg }}</h3>
+</div>
+<script>
+  class LeopoldVue {
+    constructor(options = {}) {
+      this.$options = options;
+      // 获取el元素
+      this.$el = document.querySelector(options.el);
+      this._data = options.data;
+      
+      // 设置订阅池进行保存订阅器
+      this._watchTpl = {};
+      
+      // 设置observer函数，对data数据进行重写，实现数据变化的监听
+      this._observer(this._data);
+      
+      // 编译模板和指令，生成订阅器发布订阅
+      this._compile(this.$el);
+    }
+  }
+  
+  LeopoldVue.prototype._observer = function (obj) {
+    Object.keys(obj).forEach(key => {
+      // 添加每一个属性的订阅器的存放位置
+      this._watchTpl[key] = {
+        _directives: []
+      };
+      
+      let watcherTpl = this._watchTpl[key];
+      // 获取当前key的值
+      let value = obj[key];
+      Object.defineProperty(this, key, {
+        configurable: true,
+        enumerable: true,
+        get() {
+          console.log(`${key}获取的值是${value}`);
+          return value;
+        },
+        set(newVal) {
+          // 判断赋值的内容是否与原先不一样
+          if (newVal !== value) {
+            value = newVal;
+            console.log('将订阅池里相对应属性进行触发更新');
+            
+            // 将订阅池里相对应属性进行触发更新
+            // watcherTpl._directives.forEach(item => item.update());
+          }
+        }
+      })
+    })
+  };
+
+  LeopoldVue.prototype._compile = function () {
+  
+  }
+  
+  class Watcher {
+    constructor(el, vm, val, attr) {
+      this.el = el;
+      
+      this.vm = vm;
+      this.val = val;
+      this.attr = attr;
+      this.update();
+    }
+  }
+  
+  Watcher.prototype.update = function () {
+    this.el[this.attr] = this.vm._data;
+  }
+  
+  
+</script>
+<script>
+  const app = new LeopoldVue({
+    el: '#app',
+    data: {
+      msg: 'Sze'
+    }
+  });
+
+  console.log(app);
+</script>
+</body>
+</html>

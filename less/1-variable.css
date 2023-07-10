@@ -1,0 +1,51 @@
+/* 1.普通变量 */
+.one {
+  width: 300px;
+  color: #222;
+  background: skyblue;
+}
+/* 2.选择器变量 */
+#two {
+  color: #999;
+  width: 50%;
+}
+.two {
+  color: #ccc;
+}
+#two {
+  color: #666;
+}
+/* 3.属性变量 */
+.Three {
+  border-style: solid;
+}
+/* 4.url 变量 */
+body {
+  background: url("../img/dog.png");
+}
+/* 5.声明变量 */
+.five {
+  background: red;
+}
+.five {
+  width: 200px;
+  height: 200px;
+  border: solid 1px red;
+}
+/* 6.变量运算 */
+.six {
+  width: 280px;
+  height: 200px;
+  margin: 1400px;
+  color: #444444;
+  background-color: #333333;
+}
+/* 7.变量作用域 */
+.seven {
+  width: "fnord";
+}
+/* 8.变量定义变量 */
+.eight::after {
+  content: "I am fnord.";
+}
+/*# sourceMappingURL=1-variable.css.map */

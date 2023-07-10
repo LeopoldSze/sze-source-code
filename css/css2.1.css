@@ -1,0 +1,74 @@
+/* 3.2 width/heigth */
+.third-second .father {
+  width: 150px;
+  padding: 10px;
+  background-color: #cd0;
+}
+.third-second .father .child {
+  white-space: nowrap;
+  display: inline-block;
+  padding: 5px;
+  background-color: #f0f3f9;
+}
+
+.third-second .box {
+  width: 150px;
+  padding: 10px;
+  background-color: #723232;
+  color: #fff;
+  text-align: center;
+}
+
+.third-second .box .content {
+  display: inline-block;
+  text-align: left;
+}
+
+/* 4.1 content */
+.forth-first .box-empty div {
+  padding: 10px;
+  border: 10px solid #cd0000;
+  margin-bottom: 10px;
+}
+
+.forth-first .box-empty div:empty {
+  border-style: dashed;
+}
+
+.forth-first .box-empty div::after {
+  content: '伪元素生成的内容';
+}
+
+/* 4.2 padding */
+.forth-second {
+  width: 300px;
+}
+.forth-second .box {
+  border: 1px solid #444;
+}
+.forth-second .box1 {
+  padding: 50%;
+}
+.forth-second .box2 {
+  padding: 25% 50%;
+}
+.forth-second .box3 {
+  border: 2px dashed #cd0000;
+}
+.forth-second .box3 span {
+  padding: 50%;
+  background-color: gray;
+}
+.forth-second .box4 {
+  border: 2px dashed darkblue;
+}
+.forth-second .box4 span {
+  padding: 10%;
+  font-size: 0;
+}
+.forth-second .box5 a {
+  padding: 30px;
+  background-color: #666666;
+  color: #fff;
+  cursor: pointer;
+}

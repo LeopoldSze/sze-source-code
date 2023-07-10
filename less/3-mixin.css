@@ -1,0 +1,83 @@
+/* 1.无参数方法 ./# */
+.card {
+  background: #f6f6f6;
+  -webkit-box-shadow: 0 1px 2px rgba(151, 151, 151, 0.58);
+  box-shadow: 0 1px 2px rgba(151, 151, 151, 0.58);
+}
+.one {
+  background: #f6f6f6;
+  -webkit-box-shadow: 0 1px 2px rgba(151, 151, 151, 0.58);
+  box-shadow: 0 1px 2px rgba(151, 151, 151, 0.58);
+}
+/* 2.默认参数方法 */
+.two_1 {
+  border: solid 1px red;
+  box-shadow: 0px 5px 30px red;
+}
+.two_2 {
+  border: solid 1px #000;
+  box-shadow: 0px 50px 30px #000;
+}
+.two_3 {
+  border: solid 1px #000;
+  box-shadow: 10px 50px 30px #000;
+}
+/* 3.匹配模式 */
+.three {
+  border-color: transparent transparent transparent #999;
+  border-style: solid;
+  border-width: 50px;
+}
+/* 4.命名空间 */
+.four_1 {
+  height: 100px;
+}
+.four_2 {
+  width: 300px;
+}
+.four_3 {
+  background: #723232;
+  width: 20px;
+}
+/* 5.方法筛选 */
+#main {
+  border: solid #999 200px;
+  background: #111;
+  font-size: 40px;
+}
+/* 6.不定参数 */
+.six {
+  box-shadow: 1px 4px 30px red;
+  text-shadow: 1px 4px 30px red;
+}
+/* 7.使用!important */
+.bor {
+  border: solid 1px red;
+  margin: 50px;
+}
+.seven {
+  border: solid 1px red !important;
+  margin: 50px !important;
+}
+/* 8.循环方法 */
+.column-1 {
+  width: 25%;
+}
+.column-2 {
+  width: 50%;
+}
+.column-3 {
+  width: 75%;
+}
+.column-4 {
+  width: 100%;
+}
+/* 9.属性拼接 - 逗号 */
+.main {
+  box-shadow: inset 0 0 10px #555, 0 0 20px black;
+}
+/* 9.属性拼接 - 空格 */
+.main {
+  transform: scale(2) rotate(15deg);
+}
+/*# sourceMappingURL=3-mixin.css.map */

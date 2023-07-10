@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .parent {
+      margin-bottom: 20px;
+    }
+    
+    .child {
+      text-align: center;
+      border: 1px solid #cccccc;
+    }
+    
+    .parent_1 {
+      text-align: center;
+    }
+    
+    .child_1 {
+      display: inline;
+    }
+    
+    .child_2 {
+      width: 32px;
+      margin: 0 auto;
+    }
+    
+    .child_3 {
+      display: table;
+      margin: 0 auto;
+    }
+    
+    .parent_4 {
+      position: relative;
+      height: 30px;
+    }
+    .child_4 {
+      position: absolute;
+      width: 32px;
+      left: 50%;
+      margin-left: -16px;
+    }
+    
+    .parent_5 {
+      position: relative;
+      height: 30px;
+    }
+    .child_5 {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .parent_6 {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+<!--1.子级块级元素设为行内元素-->
+<div class="parent parent_1">
+  <div class="child child_1">test</div>
+</div>
+
+<!--2.子元素有宽度，设置margin-->
+<div class="parent parent_2">
+  <div class="child child_2">test</div>
+</div>
+
+<!--3.子元素设置 display: table-->
+<div class="parent parent_3">
+  <div class="child child_3">test</div>
+</div>
+
+<!--4.absolute + 负margin-->
+<div class="parent parent_4">
+  <div class="child child_4">test</div>
+</div>
+
+<!--5.absolute + transform-->
+<div class="parent parent_5">
+  <div class="child child_5">test</div>
+</div>
+
+<!--6.flex-->
+<div class="parent parent_6">
+  <div class="child child_6">test</div>
+</div>
+</body>
+</html>

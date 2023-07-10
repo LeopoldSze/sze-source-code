@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>海量数据列表</title>
+</head>
+<body>
+<ul></ul>
+<script>
+  const total = 100000; // 总条数
+  const once = 20; // 每次插入条数
+  const loopCount = Math.ceil(total / once); // 需要插入的次数
+  let renderCount = 0; // 渲染的次数
+  
+  const ul = document.querySelector('ul'); // 获取插入的父节点
+  
+  function add () {
+    // 创建虚拟节点
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < once; i++) {
+      const li = document.createElement('li');
+      li.innerHTML = Math.floor(Math.random() * 100000);
+      fragment.appendChild(li);
+    }
+    
+    ul.appendChild(fragment);
+    renderCount++;
+    loop();
+  }
+  
+  function loop () {
+    if (renderCount < loopCount) {
+      window.requestAnimationFrame(add);
+    }
+  }
+  
+  loop();
+</script>
+</body>
+</html>

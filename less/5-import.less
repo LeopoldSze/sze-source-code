@@ -1,0 +1,25 @@
+/* 1.导入可省略后缀 */
+@import "3-mixin";
+
+/* 2.@import位置可随意 */
+.five {
+  color: green;
+}
+
+@import "4-extend";
+
+// 3.reference
+@import (reference) "2-nested";
+.three:extend(.show) {}; // 继承引入的.show, 但是不编译
+
+/* 4.once */
+@import (once) "1-variable";
+@import (once) "1-variable";
+
+/* 5.multiple */
+@import (multiple) "2-nested";
+@import (multiple) "2-nested";
+
+.test {
+  width: calc(300px - 20px);
+}

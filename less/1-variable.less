@@ -1,0 +1,93 @@
+/* 1.普通变量 */
+@color: #999;
+@bgColor: skyblue;//不要添加引号
+@width: 50%;
+
+.one {
+  width: @width;
+  color: @color;
+  background: @bgColor;
+}
+
+/* 2.选择器变量 */
+@mySelector: #two;
+@Two: two;
+
+@{mySelector} { //变量名 必须使用大括号包裹
+  color: #999;
+  width: 50%;
+}
+
+.@{Two} {
+  color: #ccc;
+}
+
+#@{Two} {
+  color: #666;
+}
+
+/* 3.属性变量 */
+@borderStyle: border-style;
+@Soild: solid;
+
+.Three {
+    @{borderStyle}: @Soild; //变量名 必须使用大括号包裹
+}
+
+/* 4.url 变量 */
+@images: "../img"; //需要加引号
+
+body {
+  background: url("@{images}/dog.png"); //变量名 必须使用大括号包裹
+}
+
+/* 5.声明变量 */
+@background: {
+  background: red;
+};
+
+.five {
+  @background();
+}
+
+@Rules: {
+  width: 200px;
+  height: 200px;
+  border: solid 1px red;
+};
+
+.five {
+  @Rules();
+}
+
+/* 6.变量运算 */
+@width: 300px;
+@color: #222;
+
+.six{
+  width: @width - 20;
+  height: @width - 20 * 5;
+  margin: (@width - 20) * 5;
+  color: @color * 2;
+  background-color: @color + #111;
+}
+
+/* 7.变量作用域 */
+@var: @a;
+@a: 100%;
+
+.seven {
+  width: @var;
+  @a: 9%;
+}
+
+/* 8.变量定义变量 */
+@fnord: "I am fnord.";
+@var: "fnord";
+
+.eight::after{
+  content: @@var; // 将@var替换为其值 content: @fnord;
+}
+
+
+

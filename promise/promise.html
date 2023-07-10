@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>promise</title>
+<!--  <script src="promise-func.js"></script>-->
+<!--  <script src="promise-class.js"></script>-->
+</head>
+<body>
+<script>
+  const p1 = new Promise(resolve => setTimeout(resolve, 1000, 'p1_resolved'))
+  const p2 = new Promise(resolve => setTimeout(resolve, 2000, 'p2_resolved'))
+  const p3 = new Promise(resolve => setTimeout(resolve, 3000, 'p3_resolved'))
+  
+  const p4 = new Promise((__, reject) => setTimeout(reject, 1000, 'p4_rejected'))
+  const p5 = new Promise((__, reject) => setTimeout(reject, 2000, 'p5_rejected'))
+  const p6 = new Promise((__, reject) => setTimeout(reject, 3000, 'p6_rejected'))
+  
+  const p_all = Promise.any([p5, p4, p6])
+  p_all.then(res => {
+    console.log('p_all_resolved:', res)
+  }).catch(e => {
+    console.warn('p_all_rejected:', e)
+  })
+</script>
+</body>
+</html>

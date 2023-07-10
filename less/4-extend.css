@@ -1,0 +1,19 @@
+/* 1.extend */
+.animation,
+.one_1 {
+  transition: all 0.3s ease-out;
+}
+.animation .hide,
+.one_2 {
+  transform: scale(0);
+}
+/* 2.all 全局搜索替换 */
+.two,
+#two {
+  width: 200px;
+}
+.two:after,
+#two:after {
+  content: "Less is good!";
+}
+/*# sourceMappingURL=4-extend.css.map */

@@ -1,0 +1,29 @@
+/* 1.嵌套 */
+#header::after {
+  content: "Less is more!";
+}
+#header .title {
+  font-weight: bold;
+}
+#header_content {
+  margin: 20px;
+}
+/* 2.媒体查询 */
+@media screen and (max-width: 768px) {
+  #main {
+    width: 100px;
+  }
+}
+@media tv {
+  #main {
+    width: 2000px;
+  }
+}
+/* 3.实战 */
+#main.show {
+  display: block;
+}
+.show {
+  display: none;
+}
+/*# sourceMappingURL=2-nested.css.map */

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div id="app"></div>
+<script src="/virtual/bundle.js"></script>
+<script>
+  const templateStr = `
+    <div>
+      <ul>
+        {{#students}}
+        <li>
+          学生{{name}}的年龄是{{age}},爱好是
+          <ol>
+            {{#hobbies}}
+            <li>{{.}}</li>
+            {{/hobbies}}
+          </ol>
+        </li>
+        {{/students}}
+      </ul>
+    </div>
+  `
+  const data = {
+    students: [
+      { name: '小名', age: 10, hobbies: ['游泳', '健身'] },
+      { name: '小红', age: 12, hobbies: ['上网', '打球', '看书'] },
+      { name: '小花', age: 18, hobbies: ['打架', '睡觉'] }
+    ]
+  };
+  
+  /*const templateStr = '我爱{{somebody}},{{somebody}}也爱我,我好{{mood}},我考了{{a.b.c}}分';
+  
+  const data = {
+    somebody: '尚硅谷',
+    mood: '高兴',
+    a: {
+      b: {
+        c: 100
+      }
+    }
+  }*/
+
+  const domStr = SSG_TemplateEngine.render(templateStr, data);
+  const app = document.getElementById('app');
+  app.innerHTML = domStr;
+</script>
+</body>
+</html>
