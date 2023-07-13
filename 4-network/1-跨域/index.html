@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>跨域解决</title>
+</head>
+<body>
+<script>
+  /**
+   * 方法1：JSONP
+   * @param name
+   * @returns {Promise}
+   */
+  const jsonp = (name) => {
+    const script = document.createElement('script')
+    script.src = `http://localhost:3000/api/jsonp?callback=${name}`
+    document.body.appendChild(script)
+    
+    return new Promise(resolve => {
+      window[name] = (data) => {
+        resolve(data)
+      }
+    })
+  }
+  
+  // jsonp(`callback${Date.now()}`).then(res => {
+  //   console.log('jsonp:', res)
+  // })
+  
+  /**
+   * 方法2：前端代理
+   */
+  fetch('/api/json').then(res => res.json()).then(res => {
+    console.log('proxy:', res)
+  })
+  
+  /**
+   * 方法3：后端cors
+   */
+  fetch('http://localhost:3000/api/cors').then(res => res.json()).then(res => {
+    console.log('cors:', res)
+  })
+  
+  /**
+   * 方法4：Nginx代理
+   */
+  fetch('/api/nginx').then(res => res.json()).then(res => {
+    console.log('nginx:', res)
+  })
+</script>
+</body>
+</html>

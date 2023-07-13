@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>请求</title>
+  <style>
+    button {
+      margin: 12px;
+    }
+  </style>
+</head>
+<body>
+<h2>Ajax请求</h2>
+<p>
+  <button id="xhr-get">发送get请求</button>
+  <button id="xhr-abort">中断请求</button>
+</p>
+<p>
+  <label for="xhr-progress">xhr请求进度：</label>
+  <progress id="xhr-progress" max="100"></progress>
+  <span id="xhr-progress-value"></span>
+</p>
+<p>
+  <button id="xhr-post">发送post请求</button>
+</p>
+<p>
+  <label for="xhr-upload">上传文件：</label>
+  <input type="file" id="xhr-upload">
+</p>
+<hr>
+
+<h2>fetch请求</h2>
+<p>
+  <button id="fetch-get">发送get请求</button>
+  <button id="fetch-abort">中断请求</button>
+</p>
+<p>
+  <label for="fetch-progress">fetch请求进度：</label>
+  <progress id="fetch-progress" max="100"></progress>
+  <span id="fetch-progress-value"></span>
+</p>
+<p>
+  <button id="fetch-post">发送post请求</button>
+</p>
+<hr>
+
+<h2>SSE服务端单工请求</h2>
+<p>
+  <button id="sse">发起sse请求</button>
+</p>
+<p class="info"></p>
+
+<h2>websocket</h2>
+<p></p>
+<hr>
+
+<h2>navigator.sendBeacon</h2>
+<button id="beacon-btn">发送beacon</button>
+<script>
+  /**
+   * 处理XHR请求
+   */
+  const xhrGetBtn = document.querySelector('#xhr-get')
+  const xhrAbortBtn = document.querySelector('#xhr-abort')
+  const xhrProgress = document.querySelector('#xhr-progress')
+  const xhrProgressValue = document.querySelector('#xhr-progress-value')
+  const xhrPostBtn = document.querySelector('#xhr-post')
+  const xhrUploadBtn = document.querySelector('#xhr-upload')
+  
+  // 发送get请求
+  const sendGetAjax = () => {
+    xhrProgress.value = 0
+    xhrProgressValue.innerText = `0%`
+    const xhr = new XMLHttpRequest()
+    xhr.open('get', 'http://localhost:3000/xhr/get?name=sze&age=18')
+    xhr.timeout = 60000
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log('xhr-get success')
+      }
+    }
+    
+    /**
+     * 处理超时
+     */
+    xhr.addEventListener('timeout', () => {
+      alert('xhr请求超时')
+    })
+    
+    /**
+     * 处理进度
+     */
+    xhr.addEventListener('progress', (event) => {
+      const rate = (event.loaded / event.total * 100).toFixed(2)
+      console.log('rate', rate)
+      xhrProgress.value = rate
+      xhrProgressValue.innerText = `${rate}%`
+    })
+    
+    /**
+     * 处理中断请求
+     */
+    xhr.addEventListener('abort', () => {
+      console.log('xhr请求中断')
+    })
+    
+    xhrAbortBtn.addEventListener('click', () => {
+      console.log('xhr:', xhr)
+      xhr.abort()
+    })
+    
+    xhr.send()
+  }
+  
+  // 发送post请求
+  const sendPostAjax = () => {
+    const xhr = new XMLHttpRequest()
+    xhr.open('post', 'http://localhost:3000/xhr/post')
+    
+    // 设置请求头，一定要放在open下面
+    // xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    
+    // 设置成功处理
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        console.log('xhr success')
+      }
+    })
+    
+    // 1. 传递json数据要序列化
+    // xhr.send(JSON.stringify({
+    //   name: 'leopold'
+    // }))
+    
+    // 2. 传递表单数据类似get的k&v
+    xhr.send('name=leopold&age=18')
+  }
+  
+  // 发送上传请求
+  const sendUploadAjax = (e) => {
+    const formData = new FormData()
+    formData.append('file', xhrUploadBtn.files[0])
+    const xhr = new XMLHttpRequest()
+    xhr.open('post', 'http://localhost:3000/xhr/upload')
+    
+    // 设置成功处理
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log('xhr success')
+      }
+    }
+    
+    xhr.send(formData)
+  }
+  
+  xhrGetBtn.addEventListener('click', sendGetAjax)
+  xhrPostBtn.addEventListener('click', sendPostAjax)
+  xhrUploadBtn.addEventListener('change', sendUploadAjax)
+  
+  
+  /**
+   * 处理fetch请求
+   */
+  const fetchGetBtn = document.querySelector('#fetch-get')
+  const fetchPostBtn = document.querySelector('#fetch-post')
+  const fetchAbortBtn = document.querySelector('#fetch-abort')
+  const fetchProgress = document.querySelector('#fetch-progress')
+  const fetchProgressValue = document.querySelector('#fetch-progress-value')
+  let abort = new AbortController()
+  
+  // get请求
+  fetchGetBtn.addEventListener('click', () => {
+    fetchProgress.value = 0
+    fetchProgressValue.innerText = `0%`
+    
+    const request = () => {
+      fetch('http://localhost:3000/fetch/get?name=leopold&age=18', {
+        signal: abort.signal
+      }).then(async res => {
+        // 克隆一个结果
+        const response = res.clone()
+        
+        /**
+         * 计算响应进度
+         * @type {ReadableStreamDefaultReader<Uint8Array>}
+         */
+          // 返回一个流
+        const reader = res.body.getReader()
+        // 总长度
+        const total = res.headers.get('Content-Length')
+        let loaded = 0
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) {
+            break
+          }
+          loaded += value.length // 当前进度
+          const rate = (loaded / total * 100).toFixed(2)
+          console.log('rate:', rate)
+          fetchProgress.value = rate
+          fetchProgressValue.innerText = `${rate}%`
+        }
+        
+        return response.text()
+      }).then(res => {
+        console.log('fetch get success')
+      }).catch(e => {
+        console.log('e:', e)
+        if (e.name === 'AbortError') {
+          abort = new AbortController()
+          request()
+        }
+      })
+    }
+    
+    /**
+     * 超时
+     * @param duration
+     */
+    const timeoutFn = (duration = 1500) => {
+      setTimeout(() => {
+        abort.abort()
+      }, duration)
+    }
+    
+    request()
+  })
+  
+  // post请求
+  fetchPostBtn.addEventListener('click', () => {
+    fetch('http://localhost:3000/fetch/post', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: 'leopold'
+      })
+    }).then(res => res.json()).then(res => {
+      console.log('fetch post:', res)
+    })
+  })
+  
+  // 中断请求
+  fetchAbortBtn.addEventListener('click', () => {
+    abort.abort()
+  })
+  
+  /**
+   * 处理SSE请求
+   */
+  const sseBtn = document.querySelector('#sse')
+  const info = document.querySelector('.info')
+  sseBtn.addEventListener('click', () => {
+    const sse = new EventSource('http://localhost:3000/api/sse')
+    sse.addEventListener('message', (e) => {
+      info.innerText += e.data
+    })
+  })
+  
+  /**
+   * 处理websocket
+   */
+  const ws = new WebSocket('ws://localhost:5566')
+  ws.open = (e) => {
+    console.log('连接成功', e)
+  }
+  
+  /**
+   * 处理beacon请求
+   */
+  const beaconBtn = document.querySelector('#beacon-btn')
+  beaconBtn.addEventListener('click', () => {
+    navigator.sendBeacon('http://localhost:3000/api/beacon?name=lepold')
+  })
+</script>
+</body>
+</html>

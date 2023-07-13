@@ -3,8 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <title>data-structure</title>
+  <style>
+    .box {
+      width: 0;
+    }
+  </style>
 </head>
 <body>
-<script src="4-set.js"></script>
+<div class="box">111</div>
+<span>222</span>
+<script>
+  const a = [1,2,2,2,3,3,4]
+  
+  // 写一个查找数组重复元素的方法
+  const findRepeat = (arr) => {
+    const map = {}
+    const result = []
+    arr.forEach(item => {
+      if (map[item]) {
+        result.push(item)
+      } else {
+        map[item] = true
+      }
+    })
+    return result
+  }
+  console.log(findRepeat(a))
+</script>
 </body>
 </html>

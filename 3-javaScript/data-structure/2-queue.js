@@ -94,14 +94,17 @@ const PriorityQueue = (function() {
     enqueue (value, level) {
       let queueElement = new QueueElement(value, level)
       const queue = items.get(this)
-      let added = queue.some((item, index) => {
+      const added = queue.some((item, index) => {
         // 如果要添加的元素的level低于item的，就添加到该节点之前
         if (level < item.level) {
           queue.splice(index, 0, queueElement)
           return true
         }
       })
-      if (!added) queue.push(queueElement)
+      // 元素未添加，说明优先级较低，直接加入末尾
+      if (!added) {
+        queue.push(queueElement)
+      }
     }
     
     /**
@@ -146,6 +149,13 @@ const PriorityQueue = (function() {
   
   return PriorityQueue
 })();
+{
+  const priorityList = new PriorityQueue()
+  priorityList.enqueue('sze1', 5)
+  priorityList.enqueue('sze2', 1)
+  priorityList.enqueue('sze', 3)
+  console.log('priorityList:', priorityList.dequeue(), priorityList.dequeue(), priorityList.dequeue())
+}
 
 
 /**
