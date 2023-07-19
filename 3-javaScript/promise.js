@@ -6,231 +6,271 @@
 const promisify = fn => args =>
   new Promise((resolve, reject) => {
     args.success = function (res) {
-      resolve(res);
-    };
+      resolve(res)
+    }
     args.fail = function (error) {
-      reject(error);
+      reject(error)
     }
   })
+
 // const wxRequest = promisify(wx.request);
 
 /**
- * 手写Promise构造函数
- * @param executor
- * @constructor
+ * 一个运行微队列的任务函数
+ * @param {Function} callback
  */
-function SzePromise(executor) {
-  this.status = 'pending';
-  this.value = null;
-  this.reason = null;
-  this.onFulfilledArray = [];
-  this.onRejectedArray = [];
-  
-  const resolve = (value) => {
-    if (value instanceof SzePromise) {
-      return value.then(resolve, reject);
-    }
-    setTimeout(() => {
-      if (this.status === 'pending') {
-        this.value = value;
-        this.status = 'fulfilled';
-        this.onFulfilledArray.forEach(func => {
-          func(value);
-        })
-      }
+function runMicroTask (callback) {
+  if (typeof Promise !== 'undefined' && Promise.toString().indexOf('[native code]') !== -1) {
+    Promise.resolve().then(callback)
+  } else if (typeof MutationObserver !== 'undefined') {
+    let observer = new MutationObserver(callback)
+    let textNode = document.createTextNode('1')
+    observer.observe(textNode, {
+      characterData: true
     })
-  }
-  
-  const reject = (reason) => {
-    setTimeout(() => {
-      if (this.status === 'pending') {
-        this.reason = reason;
-        this.status = 'rejected';
-        this.onRejectedArray.forEach(func => {
-          func(reason);
-        })
-      }
-    })
-  }
-  
-  try {
-    executor(resolve, reject);
-  } catch (e) {
-    reject(e);
-  }
-  console.log('实例化')
-}
-
-/**
- * Promise原型then方法
- * @param onfulfilled
- * @param onrejected
- */
-SzePromise.prototype.then = function (onfulfilled, onrejected) {
-  onfulfilled = typeof onfulfilled === 'function' ? onfulfilled : data => data;
-  onrejected = typeof onrejected === 'function' ? onrejected : error => { throw error };
-  
-  // promise2将作为then的返回值
-  let promise2;
-  
-  if (this.status === 'fulfilled') {
-    return promise2 = new SzePromise((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          // 这个新的promise2的经过resolve处理后的值为onfulfilled的执行结果
-          let result = onfulfilled(this.value);
-          resolvePromise(promise2, result, resolve, reject);
-        } catch (e) {
-          reject(e);
-        }
-      })
-    })
-  }
-  if (this.status === 'rejected') {
-    return promise2 = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          // 这个新的promise2的经过reject处理后的值为onrejected的执行结果
-          let result = onrejected(this.reason);
-          resolvePromise(promise2, result, resolve, reject);
-        } catch (e) {
-          reject(e);
-        }
-      })
-    })
-  }
-  if (this.status === 'pending') {
-    return promise2 = new Promise((resolve, reject) => {
-      this.onFulfilledArray.push(() => {
-        try {
-          let result = onfulfilled(this.value);
-          resolvePromise(promise2, result, resolve, reject);
-        } catch (e) {
-          reject(e);
-        }
-      });
-      this.onRejectedArray.push(() => {
-        try {
-          let result = onrejected(this.value);
-          resolvePromise(promise2, result, resolve, reject);
-        } catch (e) {
-          reject(e);
-        }
-      })
-    })
-  }
-  console.log('执行then');
-}
-
-/**
- * Promise原型catch方法
- * @param catchFunc
- * @returns {SzePromise|Promise}
- */
-SzePromise.prototype.catch = function (catchFunc) {
-  return this.then(null, catchFunc);
-}
-
-/**
- * Promise的resolve方法
- * @param value
- * @returns {SzePromise}
- */
-SzePromise.resolve = function (value) {
-  return new SzePromise((resolve, __reject) => {
-    resolve(value);
-  })
-}
-
-/**
- * Promise的reject方法
- * @param value
- * @returns {SzePromise}
- */
-SzePromise.reject = function (value) {
-  return new SzePromise((__resolve, reject) => {
-    reject(value);
-  })
-}
-
-const resolvePromise = (promise2, result, resolve, reject) => {
-  // 当result和promise2相等时，也就是在onfulfilled返回promise2时，执行reject
-  if (result === promise2) {
-    reject(new TypeError('error due to circular reference'));
-  }
-  
-  // 是否已经执行过onfulfilled或onrejected
-  let consumed = false;
-  let thenable;
-  
-  if (result instanceof SzePromise) {
-    if (result.status === 'pending') {
-      result.then(function (data) {
-        resolvePromise(promise2, data, resolve, reject);
-      }, reject)
-    } else {
-      result.then(resolve, reject)
-    }
-    return;
-  }
-  
-  let isComplexResult = target => (typeof target === 'function' || typeof target === 'object') && (target !== null);
-  
-  // 如果返回的是疑似SzePromise类型
-  if (isComplexResult(result)) {
-    try {
-      thenable = result.then;
-      // 判断返回值是否是SzePromise类型
-      if (typeof thenable === 'function') {
-        thenable.call(result, function (data) {
-          if (consumed) {
-            return;
-          }
-          consumed = true;
-          return resolvePromise(promise2, data, resolve, reject);
-        }, function (error) {
-          if (consumed) {
-            return;
-          }
-          consumed = true;
-          return reject(error);
-        })
-      } else {
-        resolve(result);
-      }
-    } catch (e) {
-      if  (consumed) {
-        return;
-      }
-      consumed = true;
-      reject(e);
-    }
+    textNode.data = '2'
+  } else if (typeof setImmediate !== 'undefined') {
+    setImmediate(callback)
+  } else if (process && typeof process.nextTick === 'function') { // node环境
+    process.nextTick(callback)
   } else {
-    resolve(result);
+    setTimeout(callback, 0)
   }
 }
 
-const szeP = new SzePromise((resolve, reject) => {
-  setTimeout(() => {
-    resolve('吧啦啦啦');
-  }, 2000)
-})
-szeP.then(res => {
-  console.log('szeP1:', res);
-})
-szeP.then(res => {
-  console.log('szeP2:', res);
-})
-console.log('实例：', szeP);
+/**
+ * 判断是否是Promise
+ * @param value
+ * @returns {boolean}
+ */
+function isPromise (value) {
+  return !!(value && typeof value.then === 'function')
+}
 
-const promise = new Promise((resolve, reject) => {
+/**
+ * Promise状态常量
+ */
+const PENDING = 'pending'
+const FULFILLED = 'fulfilled'
+const REJECTED = 'rejected'
+
+class SzeClassPromise {
+  /**
+   * Promise构造函数
+   * @param {Function} executor，执行器函数，包含resolve和reject两个参数，分别是成功和失败的回调，new Promise时立即执行
+   */
+  constructor (executor) {
+    this._status = PENDING
+    this._value = undefined
+    this.handlers = []
+    try {
+      executor(this._resolve.bind(this), this._reject.bind(this))
+    } catch (e) {
+      this._reject(e)
+    }
+  }
+  
+  /**
+   * 更改任务状态
+   * @param {String} status，任务状态
+   * @param {*} value，任务结果
+   * @private
+   */
+  _changeStatus (status, value) {
+    // 状态只能从pending改为fulfilled或rejected
+    if (this._status !== PENDING) {
+      return
+    }
+    
+    this._status = status
+    this._value = value
+    this._runAllHandlers()
+  }
+  
+  /**
+   * Promise状态为fulfilled时的回调
+   * @param {*} value
+   * @private
+   */
+  _resolve (value) {
+    this._changeStatus(FULFILLED, value)
+  }
+  
+  /**
+   * Promise状态为rejected时的回调
+   * @param {*} value
+   * @private
+   */
+  _reject (value) {
+    this._changeStatus(REJECTED, value)
+  }
+  
+  /**
+   * 向微队列中添加任务
+   * @param {Function} executor
+   * @param {String} status
+   * @param {Function} resolve
+   * @param {Function} reject
+   * @private
+   */
+  _pushHandler (executor, status, resolve, reject) {
+    // 如果 executor 不是函数，直接执行 resolve 或 reject
+    if (typeof executor !== 'function') {
+      if (status === FULFILLED) {
+        resolve(this._value)
+      } else {
+        reject(this._value)
+      }
+      return
+    }
+    
+    this.handlers.push({
+      executor,
+      status,
+      resolve,
+      reject
+    })
+  }
+  
+  /**
+   * 执行微队列中的所有任务
+   * @private
+   */
+  _runAllHandlers () {
+    console.log(this.handlers, 'this.handlers')
+    // 如果状态还是pending，不执行
+    if (this._status !== PENDING) {
+      return
+    }
+    while (this.handlers[0]) {
+      this._runOneHandler(this.handlers[0])
+      this.handlers.shift()
+    }
+  }
+  
+  /**
+   * 执行微队列中的一个任务
+   * @param executor
+   * @param status
+   * @param resolve
+   * @param reject
+   * @private
+   */
+  _runOneHandler ({
+    executor,
+    status,
+    resolve,
+    reject
+  }) {
+    runMicroTask(() => {
+      if (this._status !== status) {
+        return false
+      }
+      
+      if (typeof executor !== 'function') {
+        if (status === FULFILLED) {
+          resolve(this._value)
+        } else {
+          reject(this._value)
+        }
+        
+        return false
+      }
+      
+      try {
+        const result = executor(this._value)
+        if (isPromise(result)) {
+          result.then(resolve, reject)
+        } else {
+          resolve(result)
+        }
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+  
+  /**
+   * 处理then方法传入的回调
+   * @param {Function} onFulfilled
+   * @param {Function | Null} onRejected
+   * @returns {SzeClassPromise}
+   */
+  then (onFulfilled, onRejected = null) {
+    return new SzeClassPromise((resolve, reject) => {
+      this._pushHandler(onFulfilled, FULFILLED, resolve, reject)
+      this._pushHandler(onRejected, REJECTED, resolve, reject)
+      this._runAllHandlers()
+    })
+  }
+  
+  /**
+   * 处理catch方法传入的回调
+   * @param {Function} onRejected
+   * @returns {SzeClassPromise}
+   */
+  catch (onRejected) {
+    return this.then(null, onRejected)
+  }
+  
+  /**
+   * 处理finally方法传入的回调
+   * @param {Function} callback
+   * @returns {SzeClassPromise}
+   */
+  finally (callback) {
+    return this.then(data => {
+      callback()
+      return data
+    }, reason => {
+      callback()
+      throw reason
+    })
+  }
+  
+  
+  static resolve (value) {
+    return new SzeClassPromise(resolve => {
+      if (isPromise(value)) {
+        value.then(resolve)
+      } else {
+        resolve(value)
+      }
+    })
+  }
+  
+  
+  static reject (value) {
+    return new SzeClassPromise((_resolve, reject) => {
+      reject(value)
+    })
+  }
+}
+
+const p1 = new SzeClassPromise((resolve, reject) => {
   setTimeout(() => {
-    resolve('lucas');
-  }, 2000)
+    resolve('吧啦啦啦')
+  }, 10)
 })
-promise.then(data => {
-  console.log('data:', data);
-  return `${data} next then`;
-}).then(data => {
-  console.log('data2:', data);
+const p2 = p1.then(data => {
+  console.log('data:', data)
+  throw new Error('p2 error')
 })
+setTimeout(() => {
+  console.log('p1:', p1)
+  console.log('p2:', p2)
+}, 50)
+
+function delay (time) {
+  return new SzeClassPromise(resolve => {
+    setTimeout(() => {
+      resolve(time)
+    }, time)
+  })
+}
+
+// (async function () {
+//   console.log('start')
+//   const result = await delay(1000)
+//   console.log('result:', result)
+// })()
