@@ -5,13 +5,26 @@
   <title>data-structure</title>
   <style>
     .box {
-      width: 0;
+      visibility: hidden;
+    }
+    .box2 {
+      opacity: 0;
+    }
+    .box3 {
+      float: left;
     }
   </style>
 </head>
 <body>
-<div class="box">111</div>
+<div class="box" onclick="alert(111)">111</div>
+<div class="box2" onclick="alert(222)">222</div>
 <span>222</span>
+<div class="box3">
+  <span>11</span>
+  <span>22</span>
+  <span>33</span>
+  <span>44</span>
+</div>
 <script>
   const a = [1,2,2,2,3,3,4]
   
@@ -29,6 +42,16 @@
     return result
   }
   console.log(findRepeat(a))
+  
+  
+  // 写一个函数，实现判断元素是否到达可视区域
+  const isInViewPort = (el) => {
+    const rect = el.getBoundingClientRect()
+    const viewHeight = window.innerHeight || document.documentElement.clientHeight
+    const viewWidth = window.innerWidth || document.documentElement.clientWidth
+    return rect.top >= 0 && rect.left >= 0 && rect.bottom <= viewHeight && rect.right <= viewWidth
+  }
+  
 </script>
 </body>
 </html>
