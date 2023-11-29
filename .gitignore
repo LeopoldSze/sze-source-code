@@ -7,3 +7,4 @@ dist
 # 忽略 *.css.map
 /less/**/*.css.map
 /scss/**/*.css.map
+**/**/node_modules
