@@ -1,0 +1,27 @@
+/*标题*/
+section > h3 {
+   padding: 20px 0;
+   border-top: 1px dashed #ccc;
+}
+
+/*提示框*/
+dialog {
+   border-radius: 10px;
+   background-color: #333333;
+   color: #fff;
+   height: 20px;
+   line-height: 20px;
+}
+dialog::backdrop {
+   background-color: rgba(180, 180, 180, .45);
+   filter: blur(20px);
+}
+dialog p {
+   margin: 0;
+   padding: 0;
+}
+
+mark {
+   background-color: green;
+   color: #FFFFFF;
+}
