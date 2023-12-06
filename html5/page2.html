@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>page2</title>
+</head>
+<body>
+<main>
+  <section>
+    <h3>Shared worker</h3>
+  </section>
+  <article>
+    <label for="send-msg"></label><input type="text" id="send-msg">
+    <button id="send-btn">发送消息</button>
+    <h4>Results:</h4>
+    <div id="shared-result"></div>
+  </article>
+</main>
+</body>
+<script>
+  /**
+   * shared worker
+   * @type {SharedWorker}
+   */
+  const sharedWorker = new SharedWorker('js/shared-worker.js');
+  const port = sharedWorker.port;
+  const sendMsg = document.querySelector('#send-msg');
+  const sendBtn = document.querySelector('#send-btn');
+  const sharedResult = document.querySelector('#shared-result');
+  port.onmessage = function (e){
+    const msg = document.createElement('p');
+    msg.textContent = `在页面2收到消息:${e.data}`;
+    sharedResult.appendChild(msg);
+  };
+  port.start();
+  sendBtn.addEventListener('click', function () {
+    if (!sendMsg.value) {
+      return false;
+    }
+    port.postMessage(sendMsg.value);
+  })
+</script>
+</html>

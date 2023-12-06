@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="./index.css">
+  <link rel="stylesheet" href="css/index.css">
   <title>HTML5</title>
 </head>
 <body>
@@ -32,7 +32,7 @@
         <input type="password" id="password">
       </p>
       <p>
-        <label for="">radio:</label>
+        <label>radio:</label>
         <label>
           <input type="radio" name="gender" checked>man
         </label>
@@ -41,7 +41,7 @@
         </label>
       </p>
       <p>
-        <label for="">checkbox:</label>
+        <label>checkbox:</label>
         <label>
           <input type="checkbox" name="hobby">
         </label>sleep
@@ -178,6 +178,40 @@
     <button onclick="getLocation()">获取位置</button>
     <p id="location__info"></p>
   </article>
+  
+  <section>
+    <h3>IndexedDB</h3>
+  </section>
+  <article>
+  
+  </article>
+  
+  <section>
+    <h3>Dedicated worker</h3>
+  </section>
+  <article>
+    <label for="num">输入：</label><input type="text" id="num">
+    <button id="calc-button">计算</button>&nbsp;
+    <button id="stop-button">停止计算</button>
+    <p>结果是: <span id="result"></span></p>
+  </article>
+  
+  <section>
+    <h3>Shared worker</h3>
+  </section>
+  <article>
+    <label for="send-msg"></label><input type="text" id="send-msg">
+    <button id="send-btn">发送消息</button>
+    <h4>Results:</h4>
+    <div id="shared-result"></div>
+  </article>
+  
+  <section>
+    <h3>SSE: Server-Sent Events</h3>
+  </section>
+  <article>
+    <p id="sse-msg"></p>
+  </article>
 </main>
 
 <!--底部-->
@@ -189,6 +223,6 @@
 <dialog id="dialog">
   <p id="msg"></p>
 </dialog>
-<script src="index.js"></script>
+<script src="js/index.js"></script>
 </body>
 </html>
