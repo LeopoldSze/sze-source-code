@@ -10,5 +10,5 @@ module.exports = {
     name: prompt('Please Enter Name:', process.cwd().split('/').pop()),
     version: prompt('Please Enter Version:', '0.0.1'),
     description: prompt('Please Enter Description:', ''),
-    main: 'index.js',
+    main: 'axios.js',
 }
