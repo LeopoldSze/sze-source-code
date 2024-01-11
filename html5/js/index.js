@@ -2,11 +2,11 @@ const dialog = document.querySelector('#dialog');
 const msg = document.querySelector('#msg');
 
 /**
- * 提示
+ * 打开提示
  * @param toast
  * @param delay
  */
-function showToast(toast, delay = 3000) {
+function showToast(toast, delay = 2000) {
   msg.innerText = toast;
   dialog.showModal();
   setTimeout(() => {
@@ -64,47 +64,6 @@ function dealError(error) {
       break;
   }
 }
-
-
-
-// ############################# IndexedDB #####################
-const dbName = "Sze";
-const dbVersion = 1.0;
-const request = indexedDB.open(dbName, dbVersion);
-
-request.onerror = function(event) {
-  console.log("无法打开数据库:", event);
-};
-
-request.onupgradeneeded = function(event) {
-  const db = event.target.result;
-  // 在这里创建和修改数据库对象
-  const objectStore = db.createObjectStore("courses", { keyPath: "id" });
-  // createIndex() 的三个参数分别为索引名称、索引所在的属性、配置对象（说明该属性是否包含重复的值）。
-  objectStore.createIndex("title", "title", { unique: true });
-};
-
-request.onsuccess = function(event) {
-  const db = event.target.result;
-  console.log(`数据库 ${db.name} 已打开`);
-  
-  // 单条数据插入
-  const transaction = db.transaction(['courses'], 'readwrite')
-      .objectStore('courses')
-      .add({ id: 1, title: 'HTML5 简介', author: '前端周公子', createdAt: (new Date('2023-05-01')).valueOf() });
-  
-  transaction.onsuccess = function (event) {
-    console.log('数据写入成功');
-  };
-  
-  transaction.onerror = function (event) {
-    console.log('数据写入失败');
-  }
-  
-  
-};
-
-
 
 
 // ################### web worker ####################

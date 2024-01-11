@@ -172,6 +172,7 @@
     <p> Did you know, you can <mark>"Highlight something interesting"</mark> just with an HTML tag? </p>
   </article>
   
+  <!-- 地理位置信息 -->
   <section>
     <h3>地理位置信息</h3>
   </section>
@@ -180,13 +181,7 @@
     <p id="location__info"></p>
   </article>
   
-  <section>
-    <h3>IndexedDB</h3>
-  </section>
-  <article>
-  
-  </article>
-  
+  <!-- Dedicated worker -->
   <section>
     <h3>Dedicated worker</h3>
   </section>
@@ -197,6 +192,7 @@
     <p>结果是: <span id="result"></span></p>
   </article>
   
+  <!-- Shared worker -->
   <section>
     <h3>Shared worker</h3>
   </section>
@@ -207,6 +203,7 @@
     <div id="shared-result"></div>
   </article>
   
+  <!-- SSE -->
   <section>
     <h3>SSE: Server-Sent Events</h3>
   </section>
@@ -214,23 +211,41 @@
     <p id="sse-msg"></p>
   </article>
   
+  <!-- web components -->
   <section>
     <h3>Web Components</h3>
   </section>
   <article>
     <hello-world></hello-world>
   </article>
+  
+  <!-- indexedDB -->
+  <section>
+    <h3>IndexedDB</h3>
+  </section>
+  <article>
+    <div class="btn-wrap">
+      <button id="db-create">新建数据库和表</button>
+      <button id="db-add">新增数据</button>
+      <button id="db-read">读取数据</button>
+      <button id="db-update">更新数据</button>
+      <button id="db-delete">删除数据</button>
+      <button id="db-index">使用索引</button>
+      <button id="db-traverse">遍历数据</button>
+    </div>
+  </article>
 </main>
 
-<!--底部-->
+<!-- 底部 -->
 <footer>
   <p>Copyrights Reserved by Leopold-Sze©</p>
 </footer>
 
-<!--提示框-->
+<!-- 提示框 -->
 <dialog id="dialog">
   <p id="msg"></p>
 </dialog>
 <script src="js/index.js"></script>
+<script src="js/indexedDB.js"></script>
 </body>
 </html>
