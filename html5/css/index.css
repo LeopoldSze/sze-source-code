@@ -25,3 +25,64 @@ mark {
    background-color: green;
    color: #FFFFFF;
 }
+
+/*图片保持宽高比*/
+.adapt {
+   width: 36%;
+   height: 0;
+   padding-top: 36%;
+   background: pink;
+   position: relative;
+}
+img {
+   width: 100%;
+   position: absolute;
+   top: 0;
+   left: 0;
+}
+
+/*立方体盒子动效*/
+.demo {
+   width: 300px;
+   height: 300px;
+   perspective: 1000px;
+   position: relative;
+   margin: 30px auto;
+}
+.cube {
+   width: 100%;
+   height: 100%;
+   transform-style: preserve-3d;
+   position: absolute;
+}
+
+.cube-face {
+   border: 2px solid #000;
+   width: 100%;
+   height: 100%;
+   position: absolute;
+   overflow: hidden;
+   opacity: 0.6;
+   backface-visibility: visible;
+}
+.cube > img {
+   width: 100%;
+}
+.cube-face.is-front  {
+   transform: translateZ( 150px );
+}
+.cube-face.is-back   {
+   transform: rotateX( -180deg ) translateZ( 150px );
+}
+.cube-face.is-right {
+   transform: rotateY( 90deg ) translateZ( 150px );
+}
+.cube-face.is-left {
+   transform: rotateY( -90deg ) translateZ( 150px );
+}
+.cube-face.is-top {
+   transform: rotateX( 90deg ) translateZ( 150px );
+}
+.cube-face.is-bottom {
+   transform: rotateX( -90deg ) translateZ( 150px );
+}
